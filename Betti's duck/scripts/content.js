@@ -9,10 +9,25 @@ function randomBool() {
 }
 
 let duck = document.createElement('img');
+const grassTexture = 'https://i.ibb.co/PChPfhS/grass.png';
 
 function init() {
   try {
     const searchForm = document.getElementById('searchform');
+
+    for (let i = 0; i < 30; i++) {
+      let grass = document.createElement('img');
+      grass.style.position = 'absolute';
+      grass.style.width = '200px';
+      grass.style.left = `${i * 200}px`;
+      grass.style.bottom = '-10px';
+      grass.style.zIndex = '999';
+      grass.style.marginLeft = `-${i * 6}px`;
+      grass.style.padding = '0';
+      grass.src = grassTexture;
+      searchForm.appendChild(grass);
+    }
+
     duck.style.position = 'absolute';
     duck.id = "duckyduck"
     duck.style.right = '0px';
@@ -22,7 +37,8 @@ function init() {
     duck.style.height = '48px';
     duck.style.transition = 'all .5s';
     duck.style.scale = '1.01';
-    duck.style.zIndex = '999';
+    duck.style.zIndex = '998';
+    duck.style.cursor = 'grab';
     searchForm.appendChild(duck);
   }
   catch {}
@@ -34,8 +50,9 @@ let interval = 500;
 let bmove = false;
 let step = false;
 
-function duck() {
+function Duck() {
   let right = parseInt(duck.style.right.replace('px', ''));
+  duck.style.cursor = 'grab';
 
   if (right < 0) {
     duck.style.right = `5px`;
@@ -82,7 +99,7 @@ function duck() {
     interval = 500;
   }
   duck.style.scale = '1';
-  setTimeout(move, interval);
+  setTimeout(Duck, interval);
 }
 
 duck.onclick = () => {
@@ -90,6 +107,7 @@ duck.onclick = () => {
   index = 0;
   moveIndex = 100;
   interval = 50;
+  duck.style.cursor = 'grabbing';
 }
 
 document.addEventListener('keydown', (event) => {
@@ -101,4 +119,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 init();
-duck();
+Duck();
