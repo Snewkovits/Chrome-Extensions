@@ -9,9 +9,8 @@ function randomBool() {
 }
 
 let duck = document.createElement('img');
-let step = false;
 
-const init = function() {
+function init() {
   try {
     const searchForm = document.getElementById('searchform');
     duck.style.position = 'absolute';
@@ -22,36 +21,84 @@ const init = function() {
     duck.style.width = '48px';
     duck.style.height = '48px';
     duck.style.transition = 'all .5s';
-    duck.style.scale = '1.01'
+    duck.style.scale = '1.01';
+    duck.style.zIndex = '999';
     searchForm.appendChild(duck);
   }
   catch {}
 }
-function move() {
+
+let index = 0;
+let moveIndex = 5;
+let interval = 500;
+let bmove = false;
+let step = false;
+
+function duck() {
   let right = parseInt(duck.style.right.replace('px', ''));
-  if (randomBool()) {
-    if (right > 4) {
-      right -= 5;
-      duck.style.transform = 'rotateY(0deg)'
+
+  if (right < 0) {
+    duck.style.right = `5px`;
+    bmove = !bmove;
+  }
+  else if (right > window.width - 31) {
+    duck.style.right = `${window.width - 30}px`;
+    bmove = !bmove;
+  }
+  else {
+    if (step) {
+      duck.src = 'https://i.ibb.co/pbLxG9D/duck-step-128.png';
     }
     else {
-      right -= right;
+      duck.src = 'https://i.ibb.co/YZZWJV6/duck-128.png';
+    }
+    step = !step;
+    if (index < moveIndex) {
+      if (bmove) {
+        duck.style.transform = 'rotateY(0deg)';
+        duck.style.right = `${right - 5}px`;
+      }
+      else {
+        duck.style.transform = 'rotateY(180deg)';
+        duck.style.right = `${right + 5}px`;
+      }
+      index++;
+    }
+    else {
+      if (bmove) {
+        duck.style.transform = 'rotateY(0deg)';
+        duck.style.right = `${right - 5}px`;
+      }
+      else {
+        duck.style.transform = 'rotateY(180deg)';
+        duck.style.right = `${right + 5}px`;
+      }
+      index = 0;
+      bmove = randomBool();
     }
   }
-  else {
-    right += 5;
-    duck.style.transform = 'rotateY(180deg)'
+  if (index === moveIndex) {
+    moveIndex = 10;
+    interval = 500;
   }
-  if (step) {
-    duck.src = 'https://i.ibb.co/pbLxG9D/duck-step-128.png';
-    step = !step;
-  }
-  else {
-    duck.src = 'https://i.ibb.co/YZZWJV6/duck-128.png';
-    step = !step;
-  }
-  duck.style.right = `${right}px`;
-  setTimeout(move, 500);
+  duck.style.scale = '1';
+  setTimeout(move, interval);
 }
+
+duck.onclick = () => {
+  duck.style.scale = '.8';
+  index = 0;
+  moveIndex = 100;
+  interval = 50;
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    index = 0;
+    moveIndex = 100;
+    interval = 50;
+    }
+});
+
 init();
-move();
+duck();
